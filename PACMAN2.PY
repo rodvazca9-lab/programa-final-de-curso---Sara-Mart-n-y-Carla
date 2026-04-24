@@ -118,7 +118,7 @@ def main():
         pygame.display.flip()
 
 
-        
+
         reloj.tick(30)
 
     pygame.quit()
