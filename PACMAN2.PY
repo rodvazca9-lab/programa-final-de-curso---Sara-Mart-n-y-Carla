@@ -4,15 +4,23 @@ import random
 # --- CONFIGURACIÓN ---
 ANCHO_CELDA = 40
 
-# --- CONFIGURACIÓN DEL MAPA ---
+# --- CONFIGURACIÓN DEL MAPA MEJORADO (19x15) ---
+# 1: Pared, 0: Punto, 2: Inicio Jugador, 4: Enemigo
 MAPA = [
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 2, 0, 0, 1, 0, 0, 0, 4, 1],
-    [1, 0, 1, 0, 1, 0, 1, 1, 0, 1],
-    [1, 0, 1, 0, 0, 0, 0, 1, 0, 1],
-    [1, 0, 1, 1, 1, 1, 0, 1, 0, 1],
-    [1, 4, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 2, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 4, 1],
+    [1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1],
+    [1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1],
+    [1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+    [1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1],
+    [1, 1, 1, 1, 0, 1, 0, 0, 0, 4, 0, 0, 0, 1, 0, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1],
+    [1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1],
+    [1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1],
+    [1, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ]
 
 # Colores
@@ -42,8 +50,9 @@ def main():
     pygame.init()
     columnas = len(MAPA[0])
     filas = len(MAPA)
+    # Ajustamos la pantalla dinámicamente según el tamaño del mapa
     pantalla = pygame.display.set_mode((columnas * ANCHO_CELDA, filas * ANCHO_CELDA + 50))
-    pygame.display.set_caption("Pac-Man con Vidas")
+    pygame.display.set_caption("Pac-Man Extendido")
     reloj = pygame.time.Clock()
     fuente = pygame.font.SysFont("Arial", 22, bold=True)
 
@@ -93,13 +102,13 @@ def main():
                         for e in enemigos:
                             e.mover(tablero)
 
-        # 2. Lógica de Colisión (Detección de daño)
+        # 2. Lógica de Colisión
         for e in enemigos:
             if e.r == pos_p[0] and e.c == pos_p[1]:
                 vidas -= 1
                 pos_p = [1, 1] # Resetear posición del jugador
                 if vidas <= 0:
-                    vidas = 0 # Evitar números negativos
+                    vidas = 0 
 
         # 3. Dibujado
         for r in range(filas):
@@ -110,7 +119,7 @@ def main():
                 elif tablero[r][c] == 0:
                     pygame.draw.circle(pantalla, AMARILLO, (c * ANCHO_CELDA + 20, r * ANCHO_CELDA + 20), 5)
         
-        # Dibujar Jugador y Enemigos si sigue vivo
+        # Dibujar Jugador y Enemigos
         if vidas > 0:
             pygame.draw.rect(pantalla, AZUL, (pos_p[1] * ANCHO_CELDA + 5, pos_p[0] * ANCHO_CELDA + 5, 30, 30))
             for e in enemigos:
@@ -118,9 +127,9 @@ def main():
 
         # Interfaz de Usuario
         txt_puntos = fuente.render(f"Puntos: {puntuacion}/{puntos_totales}", True, BLANCO)
-        txt_vidas = fuente.render(f"Vidas: {'<3 ' * vidas}", True, ROJO)
+        txt_vidas = fuente.render(f"Vidas: {'❤️' * vidas}", True, ROJO)
         pantalla.blit(txt_puntos, (10, filas * ANCHO_CELDA + 15))
-        pantalla.blit(txt_vidas, (columnas * ANCHO_CELDA - 120, filas * ANCHO_CELDA + 15))
+        pantalla.blit(txt_vidas, (columnas * ANCHO_CELDA - 150, filas * ANCHO_CELDA + 15))
 
         # Mensajes de Fin de Juego
         if vidas == 0:
@@ -129,18 +138,4 @@ def main():
         
         if puntuacion == puntos_totales:
             ganado = True
-            msg = fuente.render("¡GANASTE! Pulsa ESC para salir", True, AMARILLO)
-            pantalla.blit(msg, (columnas * ANCHO_CELDA // 2 - 130, filas * ANCHO_CELDA // 2))
-
-        # Salir con ESC
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_ESCAPE]:
-            corriendo = False
-
-        pygame.display.flip()
-        reloj.tick(30)
-
-    pygame.quit()
-
-if __name__ == "__main__":
-    main()
+            msg
