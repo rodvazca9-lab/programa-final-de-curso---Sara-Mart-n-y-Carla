@@ -33,8 +33,14 @@ NARANJA = (255, 165, 0)
 
 class Enemigo:
     def __init__(self, r, c):
+        self.r_inicial = r
+        self.c_inicial = c
         self.r = r
         self.c = c
+
+    def reset(self):
+        self.r = self.r_inicial
+        self.c = self.c_inicial
 
     def mover(self, tablero):
         direcciones = [(-1, 0), (1, 0), (0, -1), (0, 1)]
@@ -61,6 +67,7 @@ def main():
     puntos_totales = 0
     vidas = 3
     
+    # Cargar enemigos y contar puntos
     for r in range(filas):
         for c in range(columnas):
             if tablero[r][c] == 4: 
@@ -71,7 +78,6 @@ def main():
 
     puntuacion = 0
     corriendo = True
-    ganado = False
 
     while corriendo:
         pantalla.fill(NEGRO)
@@ -80,7 +86,7 @@ def main():
             if evento.type == pygame.QUIT:
                 corriendo = False
             
-            if evento.type == pygame.KEYDOWN and vidas > 0 and not ganado:
+            if evento.type == pygame.KEYDOWN and vidas > 0:
                 nr, nc = pos_p[0], pos_p[1]
                 if evento.key == pygame.K_w: nr -= 1
                 elif evento.key == pygame.K_s: nr += 1
